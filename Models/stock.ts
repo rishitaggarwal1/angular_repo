@@ -1,7 +1,7 @@
 export interface Stock
 {
     //Defining required properties.
-    id: number;
+    stockId: number;
     stockName: string;
     stockValue: number;
 }

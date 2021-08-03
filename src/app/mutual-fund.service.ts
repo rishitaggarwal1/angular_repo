@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MutualFund } from 'src/models/mutualFund';
+import { MutualFund } from 'Models/mutualFund';
 
 @Injectable({
   providedIn: 'root'

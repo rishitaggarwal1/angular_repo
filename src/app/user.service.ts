@@ -1,9 +1,9 @@
 import { NullTemplateVisitor } from '@angular/compiler';
 import { Injectable } from '@angular/core';
-import { Customer } from 'src/models/customer';
-import { LoginModel } from 'src/models/loginmodel';
-import { PortfolioDetail } from 'src/models/portfolioDeatils';
-import { StockDetail } from 'src/models/stockDetails';
+import { Customer } from 'Models/customer';
+import { LoginModel } from 'Models/loginmodel';
+import { PortfolioDetail } from 'Models/portfolioDeatils';
+import { StockDetail } from 'Models/stockDetails';
 
 @Injectable({
   providedIn: 'root'

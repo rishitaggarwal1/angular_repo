@@ -1,71 +1,49 @@
 import { NullTemplateVisitor } from '@angular/compiler';
 import { Injectable } from '@angular/core';
-import { Customer } from 'Models/customer';
-import { LoginModel } from 'Models/loginmodel';
-import { PortfolioDetail } from 'Models/portfolioDeatils';
-import { StockDetail } from 'Models/stockDetails';
+import { Customer } from 'src/Models/customer';
+import { LoginModel } from 'src/Models/login-model';
+
+
+const DEFAULT_USER = {
+  username: 'anonymous',
+  portfolioId: -1,
+  token: ''
+}
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  user: Customer={
-    username:"",
-    portfolioDetail:{
-      portfolioId:0,
-      stockList:[],
-      mutualFundList:[]
-      
 
-    }
+  _user: Customer = DEFAULT_USER;
+
+  isLoggedIn: boolean = false;
+
+  constructor() {
   }
 
-  constructor() { 
+  get username() {
+    return this._user.username;
   }
 
-  setPortfolioDetail(portfolioId:number)
-  {
-    let portfolioDetail= {
-        portfolioId:1,
-        stockList:[
-          {
-           stockName:"TCS",
-           stockQuantity:10
-         },
-         {
-           stockName:"Infosys",
-           stockQuantity:2
-         }
-        ],
-        mutualFundList:[
-          {
-             mutualFundName:"ICICI Prudential Technology Fund",
-             mutualFundQuantity:10
-           },
-           {
-             mutualFundName:"Axis Small Cap Fund",
-             mutualFundQuantity:5
-           }
-
-        ]
-    }  
-    this.user={
-      ...this.user,
-      portfolioDetail:portfolioDetail,
-
-    } 
+  get portfolioId() {
+    return this._user.portfolioId;
   }
-  login(logins:LoginModel){
-    this.setPortfolioDetail(1);
-  }
-  updateUserDetails(user:Customer) {
-    this.user=user;
-  }
-  addStock(detail:StockDetail) {
 
-    console.log("Added Successfully");
-    this.setPortfolioDetail(this.user?.portfolioDetail.portfolioId || 1);
-    
-
+  get token() {
+    return this._user.token;
   }
+
+  login(logins: LoginModel) {
+    let user: Customer = { portfolioId: 1, username: 'Raghav', token: "xyz" };
+    this.isLoggedIn = true;
+    this._user = user;
+  }
+
+  logout() {
+    this._user = DEFAULT_USER;
+    this.isLoggedIn = false;
+  }
+
 }

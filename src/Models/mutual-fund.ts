@@ -1,5 +1,4 @@
-export interface MutualFund
-{
+export interface MutualFund {
     //Defining required properties.
     mutualFundId: number;
     mutualFundName: string;

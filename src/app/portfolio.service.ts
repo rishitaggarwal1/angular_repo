@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MutualFundDetail } from 'src/Models/mutual-fund-detail';
+import { NetWorthResponse } from 'src/Models/net-worth-response';
 import { PortfolioDetail } from 'src/Models/portfolio-detail';
 import { StockDetail } from 'src/Models/stock-detail';
 import { UserService } from './user.service';
@@ -7,7 +8,7 @@ import { UserService } from './user.service';
 @Injectable({
   providedIn: 'root'
 })
-export class PortfolioServiceService {
+export class PortfolioService {
 
   userService: UserService;
 
@@ -19,8 +20,12 @@ export class PortfolioServiceService {
   }
 
   get portfolioDetail() {
-    if (this.userService.isLoggedIn && !this.isPortfolioUpdated)
+    if (!this.userService.isLoggedIn)
+      return null;
+
+    if (!this.isPortfolioUpdated)
       this._updatePortfolioDetail();
+      
     return this._portfolioDetail;
   }
 

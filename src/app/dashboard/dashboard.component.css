@@ -1,0 +1,29 @@
+.box {
+    height: 90%;
+    padding: 0;
+    background-color: white;
+    /* margin-top: 5%; */
+}
+
+.box-md-top{
+    height: 25%;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-md-bottom{
+    height: 70%;
+    width: 100%;
+    background-color: white;
+}
+
+.box-sm{
+    width: 95%;
+    min-height: 2.5rem;
+    padding: 2.5%;
+    margin: 5px auto;
+}
+

@@ -8,6 +8,8 @@ import { FooterComponent } from './footer/footer.component';
 import { SellAssestsComponent } from './sell-assests/sell-assests.component';
 import { BuyAssestsComponent } from './buy-assests/buy-assests.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { LoginComponent } from './login/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -16,10 +18,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     SellAssestsComponent,
     BuyAssestsComponent,
     DashboardComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

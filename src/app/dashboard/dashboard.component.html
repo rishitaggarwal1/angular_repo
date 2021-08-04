@@ -1,1 +1,34 @@
-<p>dashboard works!</p>
+<div class="container-fluid bg-light h-100">
+    <div class="row justify-content-around align-items-center h-100">
+        <div class="col-md-3 mt-sm-0 order-md-2 box" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="shadow border box-md-top bg-dark text-light">
+                <h4>Net Worth: {{ netWorth.totalAssetWorth | currency : 'INR' }}</h4>
+            </div>
+            <div class="shadow border box-md-bottom">
+                For future use
+            </div>
+        </div>
+        <div class="col-md-3 order-md-0 shadow border box">
+            <h3 class="h2 my-3 text-center" style="margin: 5px;">Stocks</h3>
+            <div class="d-flex justify-content-between p-2 mb-2 border box-sm bg-light">
+                <div>Name</div>
+                <div>Quantity</div>
+            </div>
+            <div *ngFor="let stock of stockList" class="d-flex justify-content-between p-2 border box-sm bg-light">
+                <div>{{ stock.stockName }}</div>
+                <div>{{ stock.stockQuantity }}</div>
+            </div>
+        </div>
+        <div class="col-md-3 order-md-2 shadow border box">
+            <h3 class="h2 my-3 text-center" style="margin: 5px;">Mutual Funds</h3>
+            <div class="d-flex justify-content-between p-2 mb-2 border box-sm">
+                <div>Name</div>
+                <div>Quantity</div>
+            </div>
+            <div *ngFor="let mutualFund of mutualFundList" class="d-flex justify-content-between p-2 border box-sm bg-white">
+                <div>{{ mutualFund.mutualFundName }}</div>
+                <div>{{ mutualFund.mutualFundQuantity }}</div>
+            </div>
+        </div>
+    </div>
+</div>

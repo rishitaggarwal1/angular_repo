@@ -1,11 +1,12 @@
 import { NullTemplateVisitor } from '@angular/compiler';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Customer } from 'src/Models/customer';
 import { LoginModel } from 'src/Models/login-model';
 
 
 const DEFAULT_USER = {
-  username: 'anonymous',
+  username: 'Not Logged In',
   portfolioId: -1,
   token: ''
 }
@@ -15,12 +16,18 @@ const DEFAULT_USER = {
   providedIn: 'root'
 })
 export class UserService {
+  
+  _router: Router;
 
   _user: Customer = DEFAULT_USER;
+  _isLoggedIn: boolean = false;
 
-  isLoggedIn: boolean = false;
+  constructor(router: Router) {
+    this._router = router;
+  }
 
-  constructor() {
+  get isLoggedIn() {
+    return this._isLoggedIn;
   }
 
   get username() {
@@ -37,13 +44,15 @@ export class UserService {
 
   login(logins: LoginModel) {
     let user: Customer = { portfolioId: 1, username: 'Raghav', token: "xyz" };
-    this.isLoggedIn = true;
+    this._isLoggedIn = true;
     this._user = user;
+    this._router.navigate(['/']);
   }
 
   logout() {
     this._user = DEFAULT_USER;
-    this.isLoggedIn = false;
+    this._isLoggedIn = false;
+    this._router.navigate(['/login']);
   }
 
 }

@@ -1,5 +1,5 @@
-interface NetWorthResponse {
+export interface NetWorthResponse {
     totalAssetWorth: number;
-    totalStockWorth: number;
-    totalMutualFundWorth: number;
+    totalStockWorth?: number;
+    totalMutualFundWorth?: number;
 }

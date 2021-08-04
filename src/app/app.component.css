@@ -1,0 +1,16 @@
+* {
+  box-sizing: border-box;
+}
+
+#page-container {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#content {
+  flex-grow: 1;
+  padding-top: 3.5rem;
+  overflow: scroll;
+}

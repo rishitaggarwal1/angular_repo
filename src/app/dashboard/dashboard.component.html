@@ -1,34 +1,42 @@
 <div class="container-fluid bg-light h-100">
-    <div class="row justify-content-around align-items-center h-100">
-        <div class="col-md-3 mt-sm-0 order-md-2 box" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div class="shadow border box-md-top bg-dark text-light">
-                <h4>Net Worth: {{ netWorth.totalAssetWorth | currency : 'INR' }}</h4>
+    <div class="row justify-content-around align-items-center px-3 px-md-0 h-100">
+        <div class="col-md-3 order-md-2 box mt-5 my-3 my-md-0" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="shadow border box-md-top bg-dark text-light py-3 py-md-0">
+                <h4 class="d-inline-block text-center mb-0">Net Worth <span class="badge bg-success">{{ netWorth.totalAssetWorth | currency : 'INR' }}</span></h4>
             </div>
-            <div class="shadow border box-md-bottom">
+            <div class="shadow border box-md-bottom d-none d-md-block">
                 For future use
             </div>
         </div>
-        <div class="col-md-3 order-md-0 shadow border box">
+        <div class="col-md-3 order-md-0 shadow border box my-3 my-md-0">
             <h3 class="h2 my-3 text-center" style="margin: 5px;">Stocks</h3>
             <div class="d-flex justify-content-between p-2 mb-2 border box-sm bg-light">
                 <div>Name</div>
                 <div>Quantity</div>
             </div>
             <div *ngFor="let stock of stockList" class="d-flex justify-content-between p-2 border box-sm bg-light">
-                <div>{{ stock.stockName }}</div>
-                <div>{{ stock.stockQuantity }}</div>
+                <div><span>{{ stock.stockName }}</span></div>
+                <div><span class="badge bg-info">{{ stock.stockQuantity }}</span></div>
+            </div>
+            <div *ngIf="mutualFundList.length === 0" class="border box-sm bg-white">
+                <p class="text-center my-3">No Items yet</p>
             </div>
         </div>
-        <div class="col-md-3 order-md-2 shadow border box">
+        <div class="col-md-3 order-md-2 shadow border box my-3 my-md-0">
             <h3 class="h2 my-3 text-center" style="margin: 5px;">Mutual Funds</h3>
-            <div class="d-flex justify-content-between p-2 mb-2 border box-sm">
+            <div class="d-flex justify-content-between p-2 mb-2 border bg-light box-sm">
                 <div>Name</div>
                 <div>Quantity</div>
             </div>
-            <div *ngFor="let mutualFund of mutualFundList" class="d-flex justify-content-between p-2 border box-sm bg-white">
-                <div>{{ mutualFund.mutualFundName }}</div>
-                <div>{{ mutualFund.mutualFundQuantity }}</div>
-            </div>
+            <!-- <div class="border bg-light" style="margin: 5px auto;width: 95%;"> -->
+                <div *ngFor="let mutualFund of mutualFundList" class="d-flex justify-content-between p-2 border box-sm  bg-light">
+                    <div><span>{{ mutualFund.mutualFundName }}</span></div>
+                    <div><span class="badge bg-info">{{ mutualFund.mutualFundQuantity }}</span></div>
+                </div>
+                <div *ngIf="mutualFundList.length === 0" class="border box-sm">
+                    <p class="text-center my-3">No Items yet</p>
+                </div>
+            <!-- </div> -->
         </div>
     </div>
 </div>

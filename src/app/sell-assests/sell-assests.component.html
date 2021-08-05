@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-center align-items-center h-100">
+<div class="d-flex justify-content-center align-items-center h-100 bg-white">
     <div class="shadow border mt-3 p-2" style="min-height: 60%;max-width: 800px; width: 90%;">
         <h2 class="text-center mt-3">
             <span class="d-none d-sm-inline"> Sell </span> 
@@ -22,12 +22,11 @@
                 <input type="text" hidden>
                 <div class="form-group my-3">
                     <label for="quantity" class="form-label">Quantity</label>
-                    <input class="form-control" type="number" [(ngModel)]="itemDetail.quantity"  #quantity="ngModel" name="quantity" value="" id="quantity" min="1" [max]="mxQuantity" required>
+                    <input class="form-control" type="number" [(ngModel)]="itemDetail.quantity" [disabled]="!!name?.invalid" #quantity="ngModel" name="quantity" value="" id="quantity" min="1" [max]="mxQuantity" required>
                     <div *ngIf="quantity?.invalid && quantity?.touched" class="invalid-feedback d-inline-block">
                         <span *ngIf="quantity?.errors?.required">Please provide a valid number.</span>
                         <span *ngIf="quantity?.errors?.max">Value should be less than {{ mxQuantity }}</span>
                         <span *ngIf="quantity?.errors?.min">Value should be at least 1</span>
-                        
                     </div>
                 </div>
                 <div class="form-group my-3 text-center">

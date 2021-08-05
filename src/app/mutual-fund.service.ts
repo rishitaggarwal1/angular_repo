@@ -15,12 +15,16 @@ export class MutualFundService {
     this.mutualFunds = this.getAllMutualFunds();
   }
 
+  getMutualFundById(id: number){
+    return this.mutualFunds.find(item => item.mutualFundId === id);
+  }
+
   buyMutualFund(mutualFundDetail: MutualFundDetail){
 
   }
 
   getAllMutualFunds(): MutualFund[] {
-    return [
+    this.mutualFunds = [
       {
         mutualFundId: 1,
         mutualFundName: "ICICI Prudential Technology Fund",
@@ -47,5 +51,7 @@ export class MutualFundService {
         mutualFundValue: 170
       }
     ];
+
+    return this.mutualFunds;
   }
 }

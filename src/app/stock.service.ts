@@ -19,9 +19,12 @@ export class StockService {
     
   }
 
+  getStockById(id: number){
+    return this.stocks.find(item => item.stockId === id);
+  }
 
   getAllStocks(): Stock[] {
-    return [
+    this.stocks = [
       {
         stockId: 1,
         stockName: "TCS",
@@ -51,6 +54,7 @@ export class StockService {
       }
 
     ];
+    return this.stocks;
   }
 }
 

@@ -26,6 +26,23 @@ export class SellAssestsComponent implements OnInit {
   portfolioService : PortfolioService;
   portfolioDetail: PortfolioDetail | null;
 
+  constructor(
+    private route: ActivatedRoute,
+    portfolioService: PortfolioService
+    ) {
+      this.route.paramMap.subscribe(params => { 
+        this.itemDetail = {
+          name: '',
+          quantity: 0 
+        };
+        this.itemStr = params.get('item') || this.itemStr; 
+      });
+      this.portfolioService = portfolioService;
+      this.portfolioDetail = portfolioService.portfolioDetail;
+  }
+
+  ngOnInit(): void { }
+
   get itemList(){
     if ( this.itemStr === 'stock'){
       return this.portfolioDetail?.stockList.map(item => {
@@ -43,21 +60,7 @@ export class SellAssestsComponent implements OnInit {
         };
       }) || [];
     }
-  }
-
-  constructor(
-    private route: ActivatedRoute,
-    portfolioService: PortfolioService
-    ) {
-      this.portfolioService = portfolioService;
-      this.portfolioDetail = portfolioService.portfolioDetail;
-  }
-
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(params => { 
-      this.itemStr = params.get('item') || this.itemStr; 
-    });
-  }
+  } 
 
   handleChange(event: any, quantity: NgModel){
     let option = event.target.selectedOptions[0];

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AssetSaleResponse } from 'src/Models/asset-sale-response';
 import { MutualFundDetail } from 'src/Models/mutual-fund-detail';
 import { NetWorthResponse } from 'src/Models/net-worth-response';
 import { PortfolioDetail } from 'src/Models/portfolio-detail';
@@ -17,6 +18,14 @@ export class PortfolioService {
 
   constructor(userService: UserService) {
     this.userService = userService;
+  }
+
+  sell(saleDetail: PortfolioDetail){
+    let res: AssetSaleResponse = {
+      saleStatus: true,
+      networth: 90
+    }
+    return res;
   }
 
   get portfolioDetail() {

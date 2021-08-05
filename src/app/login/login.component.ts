@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { LoginModel } from 'src/Models/login-model';
 import { UserService } from '../user.service';
 
@@ -31,8 +32,13 @@ export class LoginComponent implements OnInit {
       ]
     ),
   });
-  constructor(userService: UserService) {
+  isRedirected: boolean = true;
+
+  constructor(userService: UserService, private route: ActivatedRoute) {
     this.userService = userService;
+    route.paramMap.subscribe(params => {
+      this.isRedirected = Boolean(params.get('redirected'));
+    });
   }
 
   ngOnInit(): void {

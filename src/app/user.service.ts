@@ -17,13 +17,15 @@ const DEFAULT_USER = {
 })
 export class UserService {
   
-  _router: Router;
-
   _user: Customer = DEFAULT_USER;
   _isLoggedIn: boolean = false;
 
-  constructor(router: Router) {
-    this._router = router;
+  constructor(private router: Router) {
+    let userStr = localStorage.getItem('user');
+    if(userStr != null){
+      this._user = JSON.parse(userStr);
+      this._isLoggedIn = true;
+    }
   }
 
   get isLoggedIn() {
@@ -46,13 +48,15 @@ export class UserService {
     let user: Customer = { portfolioId: 1, username: 'Raghav', token: "xyz" };
     this._isLoggedIn = true;
     this._user = user;
-    this._router.navigate(['/']);
+    this.router.navigate(['/']);
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   logout() {
     this._user = DEFAULT_USER;
     this._isLoggedIn = false;
-    this._router.navigate(['/login']);
+    localStorage.removeItem('user')
+    this.router.navigate(['/login']);
   }
 
 }

@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
+import { AssetSaleResponse } from 'src/Models/asset-sale-response';
 import { MutualFund } from 'src/Models/mutual-fund';
+import { MutualFundDetail } from 'src/Models/mutual-fund-detail';
+import { StockDetail } from 'src/Models/stock-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +13,10 @@ export class MutualFundService {
 
   constructor() {
     this.mutualFunds = this.getAllMutualFunds();
+  }
+
+  buyMutualFund(mutualFundDetail: MutualFundDetail){
+
   }
 
   getAllMutualFunds(): MutualFund[] {

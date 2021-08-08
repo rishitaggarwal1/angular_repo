@@ -1,7 +1,7 @@
 const AUTH_SERVICE_URL = "https://portfolioauth.azurewebsites.net";
 const STOCK_SERVICE_URL = "https://dailysharepriceapi.azurewebsites.net";
 const MUTUAL_FUND_SERVICE = "https://dailymutualfundnav.azurewebsites.net";
-const CALNET_SERVICE_URL = "http://calculatenetworth-microservice.azurewebsites.net"
+const CALNET_SERVICE_URL = "https://calculatenetworth-microservice.azurewebsites.net"
 
 const ALL_URLS = [
     AUTH_SERVICE_URL,

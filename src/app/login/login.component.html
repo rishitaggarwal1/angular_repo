@@ -3,8 +3,8 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="w-75 px-3 py-2 border bg-white shadow"
         style="max-width: 350px;">
         <h2 class="h2 my-4 text-center">Login</h2>
-        <div *ngIf="isRedirected" class="text-center alert alert-danger my-2 px-3 py-2">
-            Please Login to access other functionalities
+        <div *ngIf="errors.length !== 0" class="text-center alert alert-danger my-2 px-3 py-2">
+            <div class="mb" *ngFor="let error of errors">{{ error.message }}</div>
         </div>
         <div class="form-group my-3">
             <label for="username">Username</label>
@@ -24,7 +24,7 @@
         </div>
 
         <div class=" my-4 text-center">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" [disabled]="!!username?.invalid || !!password?.invalid" class="btn btn-primary">Submit</button>
         </div>
     </form>
 </div>

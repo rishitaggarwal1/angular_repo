@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
   }
 
   get netWorth(){
-    return this.portfolioService.findUserNetWorth()
+    return this.portfolioService.netWorth;
   }
 
 }

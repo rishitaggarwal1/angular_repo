@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ErrorModel } from 'src/Models/error-model';
 import { LoginModel } from 'src/Models/login-model';
+import { ALL_ERRORS, LoginRequiredError } from 'src/utils/errors';
 import { UserService } from '../user.service';
 
 @Component({
@@ -10,7 +12,6 @@ import { UserService } from '../user.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  userService: UserService;
 
   loginModel: LoginModel = {
     username: '',
@@ -32,12 +33,22 @@ export class LoginComponent implements OnInit {
       ]
     ),
   });
-  isRedirected: boolean = true;
+  showLoginRequired: boolean = true;
+  errors: ErrorModel[] = [];
 
-  constructor(userService: UserService, private route: ActivatedRoute) {
-    this.userService = userService;
+  constructor(private userService: UserService, private route: ActivatedRoute, private router: Router) {
     route.paramMap.subscribe(params => {
-      this.isRedirected = Boolean(params.get('redirected'));
+      this.errors = [];
+      this.loginModel = {
+        username: '',
+        password: ''
+      };
+
+      let errorId = Number(params.get('error') || -1);
+      let error = ALL_ERRORS.find(item => item.id === errorId);
+      if(error !== undefined){
+        this.errors.push(error);
+      }
     });
   }
 
@@ -54,7 +65,16 @@ export class LoginComponent implements OnInit {
     return password;
   }
 
-  onSubmit() {
-    this.userService.login(this.loginForm.value);
+  async onSubmit() {
+
+    var res = await this.userService.login(this.loginForm.value);
+    this.errors = [];
+
+    if(res.success){
+      this.router.navigate(['/dashboard']);
+    }
+    else{
+      this.errors.push(new ErrorModel(res.message));
+    }
   }
 }

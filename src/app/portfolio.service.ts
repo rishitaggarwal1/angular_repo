@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AssetSaleResponse } from 'src/Models/asset-sale-response';
+import { ItemDetail } from 'src/Models/item-detail';
 import { MutualFundDetail } from 'src/Models/mutual-fund-detail';
 import { NetWorthResponse } from 'src/Models/net-worth-response';
 import { PortfolioDetail } from 'src/Models/portfolio-detail';
 import { StockDetail } from 'src/Models/stock-detail';
+import { PORTFOLIO_DETAIL } from 'src/utils/static-data';
 import { UserService } from './user.service';
 
 @Injectable({
@@ -11,13 +13,15 @@ import { UserService } from './user.service';
 })
 export class PortfolioService {
 
-  userService: UserService;
-
   _portfolioDetail: PortfolioDetail | null = null;
+  _netWorth = {
+    totalAssetWorth: 100,
+    totalMutualFundWorth: 40,
+    totalStockWorth: 60
+  }
   isPortfolioUpdated: boolean = false;
 
-  constructor(userService: UserService) {
-    this.userService = userService;
+  constructor(private userService: UserService) {
   }
 
   sell(saleDetail: PortfolioDetail){
@@ -38,60 +42,32 @@ export class PortfolioService {
     return this._portfolioDetail;
   }
 
-
-  _updatePortfolioDetail() {
-    let portfolioDetail = {
-      portfolioId: 1,
-      stockList: [
-        {
-          stockName: "TCS",
-          stockQuantity: 10
-        },
-        {
-          stockName: "Infosys",
-          stockQuantity: 2
-        }
-      ],
-      mutualFundList: [
-        {
-          mutualFundName: "ICICI Prudential Technology Fund",
-          mutualFundQuantity: 10
-        },
-        {
-          mutualFundName: "Axis Small Cap Fund",
-          mutualFundQuantity: 5
-        }
-      ]
+  get netWorth(){
+    return this._netWorth;
+  }
+  
+  updateNetWorth(){
+    this._netWorth = {
+      totalAssetWorth: 200,
+      totalMutualFundWorth: 140,
+      totalStockWorth: 60
     }
+  }
+  
+  _updatePortfolioDetail() {
+    let portfolioDetail = PORTFOLIO_DETAIL;
 
     this._portfolioDetail = portfolioDetail;
     this.isPortfolioUpdated = true;
   }
 
-  addStockDetail(stockDetail: StockDetail) {
+  buy(itemDetail: ItemDetail) {
     // Actual me aisa krna pdega
     // this._updatePortfolioDetail();
 
-    let portfolioDetail: PortfolioDetail | null = this.portfolioDetail;
-    portfolioDetail?.stockList.push(stockDetail);
+    // let portfolioDetail: PortfolioDetail | null = this.portfolioDetail;
+    // portfolioDetail?.stockList.push(stockDetail);
     console.log('Stock Added to portfolio');
-  }
-
-  addMutualFundDetail(mutualFundDetail: MutualFundDetail) {
-    // Actual me aisa krna pdega
-    // this._updatePortfolioDetail();
-
-    let portfolioDetail: PortfolioDetail | null = this.portfolioDetail;
-    portfolioDetail?.mutualFundList.push(mutualFundDetail);
-    console.log('MutualFund Added to portfolio');
-  }
-
-  findUserNetWorth(): NetWorthResponse {
-    return {
-      totalAssetWorth: 100,
-      totalMutualFundWorth: 40,
-      totalStockWorth: 60
-    };
   }
 
 }

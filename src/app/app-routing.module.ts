@@ -10,6 +10,7 @@ const routes: Routes = [
     { path: 'login', component: LoginComponent },
     {
         path: '',
+        canActivate: [AuthGuard],
         children: [
             { path: 'dashboard', component: DashboardComponent },
             { path: 'buy', component: BuyAssestsComponent },
@@ -17,9 +18,8 @@ const routes: Routes = [
             { path: 'buy/:item/:id', component: BuyAssestsComponent},
             { path: 'sell', component: SellAssestsComponent },
             { path: 'sell/:item', component: SellAssestsComponent },
-            { path: '', component: DashboardComponent }
+            { path: '**', component: DashboardComponent }
         ],
-        canActivate: [AuthGuard]
     }
 
 ];

@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ErrorModel } from 'src/Models/error-model';
 import { Item } from 'src/Models/item';
 import { ItemDetail } from 'src/Models/item-detail';
 import { Stock } from 'src/Models/stock';
 import { MutualFundService } from '../mutual-fund.service';
+import { PortfolioService } from '../portfolio.service';
 import { StockService } from '../stock.service';
 
 const DEFAULT_ITEM_DETAIL: ItemDetail = {
@@ -19,74 +21,70 @@ const DEFAULT_ITEM_DETAIL: ItemDetail = {
 })
 export class BuyAssestsComponent implements OnInit {
   
+  _itemList: Item[] | null = null;
   itemStr: string = 'stock'; 
-  itemId: number | null = -1;
-  itemPrice: number = 0;
   itemDetail: ItemDetail = {...DEFAULT_ITEM_DETAIL};
-
+  itemPrice: number = 0;
+  errors: ErrorModel[] = [];
 
   constructor(
     private route: ActivatedRoute,
+    private portfolioService: PortfolioService,
     private stockService: StockService,
     private mutualFundService: MutualFundService
     ) 
-    { }
-
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(params => { 
-      this.itemStr = params.get('item') || this.itemStr; 
-      this.itemId = Number(params.get('id'));
-      this.itemDetail = { ...DEFAULT_ITEM_DETAIL };
-      if(this.itemStr === 'stock'){
-        let stock = this.stockService.getStockById(this.itemId);
-        if (!stock)
-          return;
-        this.itemPrice = stock.stockValue;
-        let itemDetail = {
-          name: stock?.stockName,
-          quantity: 1
-        };
-        this.itemDetail = itemDetail || this.itemDetail;
-      }
-      else{
-        let mutualFund = this.mutualFundService.getMutualFundById(this.itemId);
-        if (!mutualFund)
-          return;
+    { 
+      this.route.paramMap.subscribe(params => { 
+        let itemId = Number(params.get('id'));
         
-        this.itemPrice = mutualFund.mutualFundValue;
+        if(this._itemList === null){
+          this._setItemList();
+        }
+
+        this.itemStr = params.get('item') || this.itemStr; 
+        this.itemDetail = { ...DEFAULT_ITEM_DETAIL };
+        
+        let item = this.getItemById(itemId);
+        if (!item)
+          return;
+
         let itemDetail = {
-          name: mutualFund?.mutualFundName,
+          name: item.name,
           quantity: 1
         };
+
         this.itemDetail = itemDetail || this.itemDetail;
-      }
-    });
-  }
+      });
+    }
+
+  ngOnInit(): void { }
 
   get itemList(){
-    if ( this.itemStr === 'stock'){
-      return this.stockService.getAllStocks().map(item => {
-        return {
-          id: item.stockId,
-          name: item.stockName,
-          value: item.stockValue
-        };
-      }) || [];
+    return this._itemList || [];
+  }
+
+  async _setItemList(){
+    let res = await this.itemService.fetch();
+    if(res.success){
+      this._itemList = res.content;
     }
     else{
-      return this.mutualFundService.getAllMutualFunds().map(item => {
-        return {
-          id: item.mutualFundId,
-          name: item.mutualFundName,
-          value: item.mutualFundValue
-        };
-      }) || [];
+      this.errors.push(new ErrorModel(res.message));
     }
   }
 
   get bill(){
     return this.itemPrice * this.itemDetail.quantity;
   }
+  
+  get itemService(){
+    return this.itemStr === 'stock' ? this.stockService : this.mutualFundService;  
+  }
+
+  getItemById(id: number){
+    return this._itemList?.find(item => item.id === id);
+  }
+
 
   handleChange(event: any){
     let option = event.target.selectedOptions[0];
@@ -95,19 +93,7 @@ export class BuyAssestsComponent implements OnInit {
   }
 
   onSubmit(){
-
-    if(this.itemStr === 'stock'){
-      this.stockService.buyStock({
-        stockName: this.itemDetail.name,
-        stockQuantity: this.itemDetail.quantity
-      })
-    }
-    else{
-      this.mutualFundService.buyMutualFund({ 
-        mutualFundName: this.itemDetail.name,
-        mutualFundQuantity: this.itemDetail.quantity
-      });
-    } 
+    this.portfolioService.buy(this.itemDetail)
     console.log(this.itemDetail);
     alert(`${this.itemDetail.name} ${this.itemDetail.quantity}`)
   }

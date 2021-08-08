@@ -19,7 +19,7 @@ import { UserService } from './user.service';
 export class PortfolioService {
 
   _portfolioDetail: PortfolioDetail | null = null;
-  _netWorth = {
+  _netWorth: NetWorthResponse = {
     totalAssetWorth: 100,
     totalMutualFundWorth: 40,
     totalStockWorth: 60
@@ -42,50 +42,52 @@ export class PortfolioService {
     return res;
   }
 
+  get netWorth(){
+    return this._netWorth;
+  }
+
   get portfolioDetail() {
     if (!this.userService.isLoggedIn)
       return null;
-
-    if (!this.isPortfolioUpdated)
+    debugger;
+    if (!this.isPortfolioUpdated){
       this._updatePortfolioDetail();
+      this.updateNetWorth();
+    }
       
     return this._portfolioDetail;
   }
 
-  get netWorth(){
-    return this._netWorth;
+  _updatePortfolioDetail() {
+    let portfolioDetail = PORTFOLIO_DETAIL;
+    this._portfolioDetail = portfolioDetail;
+    this.isPortfolioUpdated = true;
   }
-  
+
   async updateNetWorth(){
-    if(!this.portfolioDetail){
+    if(!this._portfolioDetail){
       console.log('these code should never be excecuted');
       return;
     }
 
-
-    let url = this.netWorthUrl + this.portfolioDetail.portfolioId;
-    let netWorth = await this.http.get<number>(url)
+    let url = this.netWorthUrl + this._portfolioDetail.portfolioId;
+    console.log('Calling ', url);
+    let net = await this.http.get<number>(url)
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          alert(`Error: ${error?.statusText} : ${error?.error.message}`);
-          return throwError(error);
+          alert(`Error: ${error?.statusText} : ${error?.error?.message}`);
+          return of(null);
         })
-      ).toPromise();
+      )
+      .toPromise();
 
     this._netWorth = {
-      totalAssetWorth: netWorth,
+      totalAssetWorth: net,
       totalMutualFundWorth: 140,
       totalStockWorth: 60
     }
   }
   
-  _updatePortfolioDetail() {
-    let portfolioDetail = PORTFOLIO_DETAIL;
-
-    this._portfolioDetail = portfolioDetail;
-    this.isPortfolioUpdated = true;
-  }
-
   buy(itemDetail: ItemDetail) {
     // Actual me aisa krna pdega
     // this._updatePortfolioDetail();

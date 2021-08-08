@@ -34,13 +34,11 @@ import { AddHeaderInterceptor, HttpErrorInterceptor } from './interceptor.servic
     HttpClientModule
   ],
   providers: [
-    UserService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AddHeaderInterceptor,
       multi: true,
     },
-    UserService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,

@@ -31,9 +31,7 @@ export class AddHeaderInterceptor implements HttpInterceptor {
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
     
-    constructor(private userService: UserService, private router: Router){
-
-    }
+    constructor(private userService: UserService, private router: Router){}
     
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         console.log('Interceptor called');

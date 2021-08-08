@@ -12,6 +12,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(portfolioService: PortfolioService) {
     this.portfolioService = portfolioService;
+    portfolioService.updatePortfolioDetail();
   }
 
   ngOnInit(): void {

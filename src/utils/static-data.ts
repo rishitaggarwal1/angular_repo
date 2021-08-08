@@ -65,21 +65,21 @@ export const PORTFOLIO_DETAIL: PortfolioDetail = {
     stockList: [
       {
         stockName: "TCS",
-        stockQuantity: 10
+        stockCount: 10
       },
       {
         stockName: "Infosys",
-        stockQuantity: 2
+        stockCount: 2
       }
     ],
     mutualFundList: [
       {
         mutualFundName: "ICICI Prudential Technology Fund",
-        mutualFundQuantity: 10
+        mutualFundUnits: 10
       },
       {
         mutualFundName: "Axis Small Cap Fund",
-        mutualFundQuantity: 5
+        mutualFundUnits: 5
       }
     ]
   }

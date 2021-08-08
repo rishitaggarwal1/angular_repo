@@ -22,7 +22,7 @@
             </div>
             <div *ngFor="let stock of stockList" class="d-flex justify-content-between p-2 border box-sm bg-light">
                 <div><span>{{ stock.stockName }}</span></div>
-                <div><span class="badge bg-info" title="Availble Stocks for {{ stock.stockName }}">{{ stock.stockQuantity }}</span></div>
+                <div><span class="badge bg-info" title="Availble Stocks for {{ stock.stockName }}">{{ stock.stockCount }}</span></div>
             </div>
             <div *ngIf="mutualFundList.length === 0" class="border box-sm bg-white">
                 <p class="text-center my-3">No Items yet</p>
@@ -37,7 +37,7 @@
             <!-- <div class="border bg-light" style="margin: 5px auto;width: 95%;"> -->
                 <div *ngFor="let mutualFund of mutualFundList" class="d-flex justify-content-between p-2 border box-sm  bg-light">
                     <div><span>{{ mutualFund.mutualFundName }}</span></div>
-                    <div><span class="badge bg-info" title="Available Mutual Funds {{ mutualFund.mutualFundName }}">{{ mutualFund.mutualFundQuantity }}</span></div>
+                    <div><span class="badge bg-info" title="Available Mutual Funds {{ mutualFund.mutualFundName }}">{{ mutualFund.mutualFundUnits }}</span></div>
                 </div>
                 <div *ngIf="mutualFundList.length === 0" class="border box-sm">
                     <p class="text-center my-3">No Items yet</p>

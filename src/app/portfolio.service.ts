@@ -26,7 +26,8 @@ export class PortfolioService {
   }
   isPortfolioUpdated: boolean = false;
   netWorthUrl = CALNET_SERVICE_URL + '/api/Portfolio/calculateNetWorth/';
-  
+  portfolioDetailsUrl = CALNET_SERVICE_URL + '/api/Portfolio/portfolioDetails';
+
   constructor(
     private userService: UserService,
     private http: HttpClient
@@ -49,18 +50,26 @@ export class PortfolioService {
   get portfolioDetail() {
     if (!this.userService.isLoggedIn)
       return null;
-    debugger;
-    if (!this.isPortfolioUpdated){
-      this._updatePortfolioDetail();
-      this.updateNetWorth();
-    }
-      
+
     return this._portfolioDetail;
   }
 
-  _updatePortfolioDetail() {
-    let portfolioDetail = PORTFOLIO_DETAIL;
+  async updatePortfolioDetail() {
+    // let portfolioDetail = PORTFOLIO_DETAIL;
+    console.log('# Fetching Portfolio Details', this.portfolioDetailsUrl);
+    
+    let portfolioDetail = await this.http.get<PortfolioDetail>(this.portfolioDetailsUrl)
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          alert(`Error: ${error?.statusText} : ${error?.error?.message}`);
+          return throwError(error);
+        })
+      )  
+      .toPromise()
+
+    console.log('# PortfolioDetails Response', portfolioDetail);
     this._portfolioDetail = portfolioDetail;
+    this.updateNetWorth();
     this.isPortfolioUpdated = true;
   }
 
@@ -71,16 +80,18 @@ export class PortfolioService {
     }
 
     let url = this.netWorthUrl + this._portfolioDetail.portfolioId;
-    console.log('Calling ', url);
+    console.info('# Fetching Net Worth', url);
     let net = await this.http.get<number>(url)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           alert(`Error: ${error?.statusText} : ${error?.error?.message}`);
-          return of(null);
+          return throwError(error);
         })
       )
       .toPromise();
 
+    console.log('# NetWorth Response', net);
+    
     this._netWorth = {
       totalAssetWorth: net,
       totalMutualFundWorth: 140,

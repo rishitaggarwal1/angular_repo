@@ -50,7 +50,7 @@ export class SellAssestsComponent implements OnInit {
       return this.portfolioDetail?.stockList.map(item => {
         return {
           name: item.stockName,
-          quantity: item.stockQuantity
+          quantity: item.stockCount
         };
       }) || [];
     }
@@ -58,7 +58,7 @@ export class SellAssestsComponent implements OnInit {
       return this.portfolioDetail?.mutualFundList.map(item => {
         return {
           name: item.mutualFundName,
-          quantity: item.mutualFundQuantity
+          quantity: item.mutualFundUnits
         };
       }) || [];
     }
@@ -91,13 +91,13 @@ export class SellAssestsComponent implements OnInit {
     if(this.itemStr === 'stock'){
       saleDetail.stockList =[{ 
         stockName: itemDetail.name,
-        stockQuantity: itemDetail.quantity
+        stockCount: itemDetail.quantity
       }]
     }
     else{
       saleDetail.mutualFundList =[{ 
         mutualFundName: itemDetail.name,
-        mutualFundQuantity: itemDetail.quantity
+        mutualFundUnits: itemDetail.quantity
       }]
     }
     let res = this.portfolioService.sell(saleDetail);

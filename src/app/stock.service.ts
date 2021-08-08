@@ -17,7 +17,7 @@ import { STOCK_SERVICE_URL } from 'src/utils/api-urls';
 export class StockService {
 
   _stocks: Item[] | null = null;
-  stock_url: string = STOCK_SERVICE_URL + "/api/stock/dailySharePrice";
+  stockUrl: string = STOCK_SERVICE_URL + "/api/stock/dailySharePrice";
 
   constructor(private http: HttpClient) {
     
@@ -32,11 +32,11 @@ export class StockService {
       };
     }
 
-    let res = await this.http.get<Stock[]>(this.stock_url)
+    let res = await this.http.get<Stock[]>(this.stockUrl)
       .pipe(map<Stock[], ApiResponse>(this.mapDataToApiReponse))
       .pipe(catchError(this.mapErrorToApiReponse))
       .toPromise();
-        
+
     return res;
   }
 
@@ -59,7 +59,7 @@ export class StockService {
   }
 
   mapErrorToApiReponse(error: any) {
-    console.log(error);
+    console.log('In Stock Service', error);
     let res: ApiResponse = {
       success: false,
       message: error.error?.message || error.statusText,

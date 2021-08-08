@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NgModel, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ErrorModel } from 'src/Models/error-model';
 import { ItemDetail } from 'src/Models/item-detail';
 import { MutualFundDetail } from 'src/Models/mutual-fund-detail';
 import { PortfolioDetail } from 'src/Models/portfolio-detail';
@@ -23,28 +24,35 @@ export class SellAssestsComponent implements OnInit {
     quantity: 0,
     type: 'stock' 
   };
-
+  message: string = '';
+  errors: ErrorModel[] = []
   portfolioService : PortfolioService;
-  portfolioDetail: PortfolioDetail | null;
+  // portfolioDetail: PortfolioDetail | null;
 
   constructor(
     private route: ActivatedRoute,
     portfolioService: PortfolioService
     ) {
       this.route.paramMap.subscribe(params => { 
+        this.errors = [];
+        this.message = ''
+        this.itemStr = params.get('item') || this.itemStr; 
         this.itemDetail = {
           name: '',
           quantity: 0,
-          type: 'stock'
+          type: this.itemStr
         };
-        this.itemStr = params.get('item') || this.itemStr; 
       });
+
       this.portfolioService = portfolioService;
-      this.portfolioDetail = portfolioService.portfolioDetail;
+      portfolioService.updatePortfolioDetail();
   }
 
   ngOnInit(): void { }
 
+  get portfolioDetail(){
+    return this.portfolioService.portfolioDetail;
+  }
   get itemList(){
     if ( this.itemStr === 'stock'){
       return this.portfolioDetail?.stockList.map(item => {
@@ -80,7 +88,7 @@ export class SellAssestsComponent implements OnInit {
     
   }
 
-  onSubmit(){
+  async onSubmit(){
     let saleDetail: PortfolioDetail = {
       portfolioId: this.portfolioDetail?.portfolioId || -1,
       stockList: [],
@@ -100,8 +108,14 @@ export class SellAssestsComponent implements OnInit {
         mutualFundUnits: itemDetail.quantity
       }]
     }
-    let res = this.portfolioService.sell(saleDetail);
-    alert(`${this.itemDetail.name} ${this.itemDetail.quantity}`);
+    let res = await this.portfolioService.sell(saleDetail);
+    if(res.success){
+      this.message = res?.content?.message || res.message;
+    }
+    else{
+      this.errors.push(new ErrorModel(res.message));
+    }
+    // alert(`${this.itemDetail.name} ${this.itemDetail.quantity} ${this.itemDetail.type}`);
   }
 
 

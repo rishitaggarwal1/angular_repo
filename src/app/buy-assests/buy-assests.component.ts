@@ -27,6 +27,7 @@ export class BuyAssestsComponent implements OnInit {
   itemDetail: ItemDetail = {...DEFAULT_ITEM_DETAIL};
   itemPrice: number = 0;
   errors: ErrorModel[] = [];
+  message: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -37,10 +38,9 @@ export class BuyAssestsComponent implements OnInit {
     { 
       this.route.paramMap.subscribe(params => { 
         let itemId = Number(params.get('id'));
-        
-        
+        this.message = '';      
         this.itemStr = params.get('item') || this.itemStr; 
-        this.itemDetail = { ...DEFAULT_ITEM_DETAIL };
+        this.itemDetail = { ...DEFAULT_ITEM_DETAIL,  type: this.itemStr};
         this._setItemList();
 
         let item = this.getItemById(itemId);
@@ -52,7 +52,6 @@ export class BuyAssestsComponent implements OnInit {
           quantity: 1,
           type: this.itemStr
         };
-
         this.itemDetail = itemDetail || this.itemDetail;
       });
     }
@@ -92,10 +91,15 @@ export class BuyAssestsComponent implements OnInit {
     this.itemPrice = price;
   }
 
-  onSubmit(){
-    this.portfolioService.buy(this.itemDetail)
+  async onSubmit(){
     console.log(this.itemDetail);
-    alert(`${this.itemDetail.name} ${this.itemDetail.quantity}`)
+    let res = await this.portfolioService.buy(this.itemDetail);
+    if(res.success){
+      this.message = res.message  || 'Transaction complete';
+    }
+    else{
+      this.errors.push(new ErrorModel(res.message));
+    }
   }
   
 }

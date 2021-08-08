@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorModel } from 'src/Models/error-model';
 import { LoginModel } from 'src/Models/login-model';
 import { ALL_ERRORS, LoginRequiredError } from 'src/utils/errors';
+import { PortfolioService } from '../portfolio.service';
 import { UserService } from '../user.service';
 
 @Component({
@@ -36,7 +37,12 @@ export class LoginComponent implements OnInit {
   showLoginRequired: boolean = true;
   errors: ErrorModel[] = [];
 
-  constructor(private userService: UserService, private route: ActivatedRoute, private router: Router) {
+  constructor(
+    private route: ActivatedRoute, 
+    private router: Router,
+    private userService: UserService,
+    private portfolioService: PortfolioService 
+  ) {
     route.paramMap.subscribe(params => {
       this.errors = [];
       this.loginModel = {
@@ -71,6 +77,7 @@ export class LoginComponent implements OnInit {
     this.errors = [];
 
     if(res.success){
+      this.portfolioService.updatePortfolioDetail();
       this.router.navigate(['/dashboard']);
     }
     else{

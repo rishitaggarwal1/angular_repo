@@ -51,6 +51,7 @@ export class UserService {
   }
 
   async login(loginModel: LoginModel) {
+
     let data = await this.http.post<Customer>(this.loginUrl, loginModel)
       .pipe(
         map<Customer, ApiResponse>(this.mapDataToApiReponse)
@@ -81,7 +82,6 @@ export class UserService {
   mapDataToApiReponse(data: Customer){
     // Updating the service state
     this._user = data;
-    console.log(this._user);
     this._isLoggedIn = true;
     localStorage.setItem('user', JSON.stringify(this._user));     
     return {
@@ -96,7 +96,7 @@ export class UserService {
     console.log(error, error.error);
     let res: ApiResponse = {
       success: false,
-      message: error.error.message || error.statusText,
+      message: error?.error?.message || error.statusText,
       content: null
     };
     return of(res);

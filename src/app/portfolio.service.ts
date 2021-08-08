@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { of, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { AssetSaleResponse } from 'src/Models/asset-sale-response';
 import { ItemDetail } from 'src/Models/item-detail';
 import { ApiResponse } from 'src/Models/login-response';
@@ -20,28 +20,23 @@ export class PortfolioService {
 
   _portfolioDetail: PortfolioDetail | null = null;
   _netWorth: NetWorthResponse = {
-    totalAssetWorth: 100,
+    totalAssetWorth: 0,
     totalMutualFundWorth: 40,
     totalStockWorth: 60
   }
   isPortfolioUpdated: boolean = false;
+  
   netWorthUrl = CALNET_SERVICE_URL + '/api/Portfolio/calculateNetWorth/';
   portfolioDetailsUrl = CALNET_SERVICE_URL + '/api/Portfolio/portfolioDetails';
-
+  buyStockUrl = CALNET_SERVICE_URL + '/api/Portfolio/addStock';
+  buyMutualFundUrl = CALNET_SERVICE_URL + '/api/Portfolio/addMutualFund';
+  sellAssetsUrl = CALNET_SERVICE_URL + '/api/Portfolio/sellAssets/';
+  
   constructor(
     private userService: UserService,
     private http: HttpClient
     ) 
-  {
-  }
-
-  sell(saleDetail: PortfolioDetail){
-    let res: AssetSaleResponse = {
-      saleStatus: true,
-      networth: 90
-    }
-    return res;
-  }
+  { }
 
   get netWorth(){
     return this._netWorth;
@@ -56,8 +51,7 @@ export class PortfolioService {
 
   async updatePortfolioDetail() {
     // let portfolioDetail = PORTFOLIO_DETAIL;
-    console.log('# Fetching Portfolio Details', this.portfolioDetailsUrl);
-    
+
     let portfolioDetail = await this.http.get<PortfolioDetail>(this.portfolioDetailsUrl)
       .pipe(
         catchError((error: HttpErrorResponse) => {
@@ -65,9 +59,8 @@ export class PortfolioService {
           return throwError(error);
         })
       )  
-      .toPromise()
+      .toPromise();
 
-    console.log('# PortfolioDetails Response', portfolioDetail);
     this._portfolioDetail = portfolioDetail;
     this.updateNetWorth();
     this.isPortfolioUpdated = true;
@@ -81,31 +74,85 @@ export class PortfolioService {
 
     let url = this.netWorthUrl + this._portfolioDetail.portfolioId;
     console.info('# Fetching Net Worth', url);
-    let net = await this.http.get<number>(url)
+    let net = await this.http.get<any>(url)
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          alert(`Error: ${error?.statusText} : ${error?.error?.message}`);
+          alert(`Error: ${error?.statusText} ${error?.error?.message}`);
           return throwError(error);
         })
       )
       .toPromise();
-
-    console.log('# NetWorth Response', net);
     
     this._netWorth = {
-      totalAssetWorth: net,
+      totalAssetWorth: net.price,
       totalMutualFundWorth: 140,
       totalStockWorth: 60
     }
   }
-  
-  buy(itemDetail: ItemDetail) {
+
+  async sell(saleDetail: PortfolioDetail){
+    let res = await this.http.post<AssetSaleResponse>(this.sellAssetsUrl + this.portfolioDetail?.portfolioId, saleDetail)
+      .pipe(
+        map<AssetSaleResponse, ApiResponse>(this.mapDataToApiReponse),
+        catchError(this.mapErrorToApiReponse)
+      )
+      .toPromise();
+    this.updatePortfolioDetail() 
+    return res;
+  }
+
+  async buy(itemDetail: ItemDetail) {
     // Actual me aisa krna pdega
     // this._updatePortfolioDetail();
+    let res;
+    if(itemDetail.type === 'stock'){
+      let data = {
+        stockName: itemDetail.name,
+        stockCount: itemDetail.quantity
+      }
+      res = await this.http.post<any>(this.buyStockUrl, data)
+        .pipe(
+          map<any, ApiResponse>(this.mapDataToApiReponse),
+          catchError(this.mapErrorToApiReponse)
+        )
+        .toPromise();
+    }
+    else{
+      let data = {
+        mutualFundName: itemDetail.name,
+        mutualFundUnits: itemDetail.quantity
+      }
+      res = await this.http.post(this.buyMutualFundUrl, data)
+        .pipe(
+          map<any, ApiResponse>(this.mapDataToApiReponse),
+          catchError(this.mapErrorToApiReponse)
+        )
+        .toPromise();
+    }
 
-    // let portfolioDetail: PortfolioDetail | null = this.portfolioDetail;
-    // portfolioDetail?.stockList.push(stockDetail);
-    console.log('Stock Added to portfolio');
+    return res;
   }
-  
+
+  mapDataToApiReponse(data: any){
+    // Updating the service state  
+    console.log(data);
+    return {
+      success: true,
+      message: `Success ${ data?.message || 'Transaction complete' }`,
+      content: data
+    };
+
+  }
+
+  mapErrorToApiReponse(error: any){
+    console.log(error, error.error);
+    let res: ApiResponse = {
+      success: false,
+      message: error?.error?.message || error.statusText,
+      content: null
+    };
+    return of(res);
+  }
 }
+
+

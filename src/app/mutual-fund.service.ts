@@ -16,7 +16,7 @@ import { MUTUAL_FUND_SERVICE } from 'src/utils/api-urls';
 export class MutualFundService {
 
   _mutualFunds: Item[] | null = null;
-  mutualFund_url: string = MUTUAL_FUND_SERVICE + '/api/MutualFund/mutualFundNav';
+  mutualFundUrl: string = MUTUAL_FUND_SERVICE + '/api/MutualFund/mutualFundNav';
 
   constructor(private http: HttpClient) {
   }
@@ -25,17 +25,17 @@ export class MutualFundService {
     if(this._mutualFunds !== null){
       return {
         success: true,
-        message: "Loaded from memory",
+        message: 'Loaded from memory',
         content: this._mutualFunds
       };
     }
 
-    let res = await this.http.get<MutualFund[]>(this.mutualFund_url)
+    let res = await this.http.get<MutualFund[]>(this.mutualFundUrl)
       .pipe(map<MutualFund[], ApiResponse>(this.mapDataToApiReponse))
       .pipe(catchError(this.mapErrorToApiReponse))
       .toPromise();
 
-    return res;
+      return res;
   }
 
   mapDataToApiReponse(data: MutualFund[]): ApiResponse {
@@ -59,7 +59,7 @@ export class MutualFundService {
   mapErrorToApiReponse(error: any) {
     let res: ApiResponse = {
       success: false,
-      message: error.error.message || error.statusText,
+      message: error?.error?.message || error.statusText,
       content: null
     };
     return of(res);

@@ -16,7 +16,7 @@ import { STOCK_SERVICE_URL } from 'src/utils/api-urls';
 })
 export class StockService {
 
-  // _stocks: Item[] | null = null;
+  _stocks: Item[] | null = null;
   stock_url: string = STOCK_SERVICE_URL + "/api/stock/dailySharePrice";
 
   constructor(private http: HttpClient) {
@@ -24,6 +24,14 @@ export class StockService {
   }
 
   async fetch(){
+    if(this._stocks !== null){
+      return {
+        success: true,
+        message: "Loaded from memory",
+        content: this._stocks
+      };
+    }
+
     let res = await this.http.get<Stock[]>(this.stock_url)
       .pipe(map<Stock[], ApiResponse>(this.mapDataToApiReponse))
       .pipe(catchError(this.mapErrorToApiReponse))
@@ -33,11 +41,12 @@ export class StockService {
   }
 
   mapDataToApiReponse(data: Stock[]): ApiResponse {
-    let items = data.map(value => {
+    let items: Item[]= data.map(value => {
       return {
         id: value.stockId,
         name: value.stockName,
-        value: value.stockValue
+        value: value.stockValue,
+        type: 'stock'
       }
     });
     

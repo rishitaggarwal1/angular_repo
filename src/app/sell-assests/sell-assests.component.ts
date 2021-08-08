@@ -20,7 +20,8 @@ export class SellAssestsComponent implements OnInit {
   mxQuantity: number = 0;
   itemDetail: ItemDetail = {
     name: '',
-    quantity: 0 
+    quantity: 0,
+    type: 'stock' 
   };
 
   portfolioService : PortfolioService;
@@ -33,7 +34,8 @@ export class SellAssestsComponent implements OnInit {
       this.route.paramMap.subscribe(params => { 
         this.itemDetail = {
           name: '',
-          quantity: 0 
+          quantity: 0,
+          type: 'stock'
         };
         this.itemStr = params.get('item') || this.itemStr; 
       });

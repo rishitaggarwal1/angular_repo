@@ -1,4 +1,5 @@
 export interface ItemDetail{
     name: string,
-    quantity: number
+    quantity: number,
+    type: string
 }

@@ -15,13 +15,21 @@ import { MUTUAL_FUND_SERVICE } from 'src/utils/api-urls';
 })
 export class MutualFundService {
 
-  // _mutualFunds: Item[] | null = null;
+  _mutualFunds: Item[] | null = null;
   mutualFund_url: string = MUTUAL_FUND_SERVICE + '/api/MutualFund/mutualFundNav';
 
   constructor(private http: HttpClient) {
   }
 
   async fetch(){
+    if(this._mutualFunds !== null){
+      return {
+        success: true,
+        message: "Loaded from memory",
+        content: this._mutualFunds
+      };
+    }
+
     let res = await this.http.get<MutualFund[]>(this.mutualFund_url)
       .pipe(map<MutualFund[], ApiResponse>(this.mapDataToApiReponse))
       .pipe(catchError(this.mapErrorToApiReponse))
@@ -35,7 +43,8 @@ export class MutualFundService {
       return {
         id: value.mutualFundId,
         name: value.mutualFundName,
-        value: value.mutualFundValue
+        value: value.mutualFundValue,
+        type: 'mutualFund'
       }
     });
     

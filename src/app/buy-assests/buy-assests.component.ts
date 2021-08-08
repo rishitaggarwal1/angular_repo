@@ -11,7 +11,8 @@ import { StockService } from '../stock.service';
 
 const DEFAULT_ITEM_DETAIL: ItemDetail = {
   name: '',
-  quantity: 0
+  quantity: 0,
+  type: 'stock'
 };
 
 @Component({
@@ -37,20 +38,19 @@ export class BuyAssestsComponent implements OnInit {
       this.route.paramMap.subscribe(params => { 
         let itemId = Number(params.get('id'));
         
-        if(this._itemList === null){
-          this._setItemList();
-        }
-
+        
         this.itemStr = params.get('item') || this.itemStr; 
         this.itemDetail = { ...DEFAULT_ITEM_DETAIL };
-        
+        this._setItemList();
+
         let item = this.getItemById(itemId);
         if (!item)
           return;
 
         let itemDetail = {
           name: item.name,
-          quantity: 1
+          quantity: 1,
+          type: this.itemStr
         };
 
         this.itemDetail = itemDetail || this.itemDetail;

@@ -117,6 +117,4 @@ export class SellAssestsComponent implements OnInit {
     }
     // alert(`${this.itemDetail.name} ${this.itemDetail.quantity} ${this.itemDetail.type}`);
   }
-
-
 }

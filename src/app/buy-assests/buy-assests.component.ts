@@ -41,18 +41,21 @@ export class BuyAssestsComponent implements OnInit {
         this.message = '';      
         this.itemStr = params.get('item') || this.itemStr; 
         this.itemDetail = { ...DEFAULT_ITEM_DETAIL,  type: this.itemStr};
-        this._setItemList();
+        this._setItemList()
+          .then(() => {
+            let item = this.getItemById(itemId);
+            if (!item)
+              return;
+            // console.log(item);
+            let itemDetail = {
+              name: item.name,
+              quantity: 1,
+              type: this.itemStr
+            };
+            this.itemDetail = itemDetail || this.itemDetail;
+    
+          });
 
-        let item = this.getItemById(itemId);
-        if (!item)
-          return;
-
-        let itemDetail = {
-          name: item.name,
-          quantity: 1,
-          type: this.itemStr
-        };
-        this.itemDetail = itemDetail || this.itemDetail;
       });
     }
 
@@ -81,6 +84,7 @@ export class BuyAssestsComponent implements OnInit {
   }
 
   getItemById(id: number){
+    // console.log(this._itemList);
     return this._itemList?.find(item => item.id === id);
   }
 

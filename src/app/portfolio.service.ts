@@ -135,10 +135,10 @@ export class PortfolioService {
 
   mapDataToApiReponse(data: any){
     // Updating the service state  
-    console.log(data);
+    // console.log(data);
     return {
       success: true,
-      message: `Success ${ data?.message || 'Transaction complete' }`,
+      message: data?.message || 'Transaction complete',
       content: data
     };
 
